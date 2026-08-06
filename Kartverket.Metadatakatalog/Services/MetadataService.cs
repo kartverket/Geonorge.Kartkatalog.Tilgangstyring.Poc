@@ -905,7 +905,13 @@ namespace Kartverket.Metadatakatalog.Service
             var mdMetadataType = _geoNorge.GetRecordByUuid(uuid);
             if(mdMetadataType == null) 
             {
-                try { mdMetadataType = _geoNorge.GetRecordByUuid(uuid);}catch (Exception ex) { }
+                try {
+                    _geoNorge = new GeoNorge("", "", _configuration["MetUrl"]);
+                    mdMetadataType = _geoNorge.GetRecordByUuid(uuid);
+                }
+                catch (Exception ex) 
+                { 
+                }
             }
             return mdMetadataType == null ? null : new SimpleMetadata(mdMetadataType);
         }
@@ -2058,6 +2064,7 @@ namespace Kartverket.Metadatakatalog.Service
 
         public string GetExternalXml(string uuid)
         {
+            _geoNorge = new GeoNorge("", "", _configuration["MetUrl"]);
             var metadata = _geoNorge.GetRecordByUuid(uuid);
             var xml = SerializeUtil.SerializeToString(metadata);
             return xml;

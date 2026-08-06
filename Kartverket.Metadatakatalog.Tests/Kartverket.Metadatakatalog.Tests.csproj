@@ -30,35 +30,35 @@
 
   <ItemGroup>
 	<!-- Core testing packages -->
-	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-	<PackageReference Include="xunit" Version="2.9.2" />
-	<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+	<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
-	<PackageReference Include="coverlet.collector" Version="6.0.2">
+	<PackageReference Include="coverlet.collector" Version="10.0.1">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
 
 	<!-- Test utilities and mocking -->
-	<PackageReference Include="FluentAssertions" Version="7.0.0" />
+	<PackageReference Include="FluentAssertions" Version="8.10.0" />
 	<PackageReference Include="Moq" Version="4.20.72" />
-	<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.5" />
+	<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
 
 	<!-- Only include packages that are actually needed for testing and not included in main project -->
 	<!-- Match versions with main project to avoid downgrades -->
 	<PackageReference Include="GeoNorgeAPI" Version="4.0.8" />
-	<PackageReference Include="Google.Apis.Auth" Version="1.73.0" />
-	<PackageReference Include="Google.Apis.Core" Version="1.73.0" />
+	<PackageReference Include="Google.Apis.Auth" Version="1.75.0" />
+	<PackageReference Include="Google.Apis.Core" Version="1.75.0" />
 	<PackageReference Include="Kartverket.Geonorge.Utilities" Version="2.0.0" />
-	<PackageReference Include="log4net" Version="3.3.0" />
+	<PackageReference Include="log4net" Version="3.3.2" />
 	<PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.3" />
-	<PackageReference Include="System.CodeDom" Version="10.0.5" />
+	<PackageReference Include="System.CodeDom" Version="10.0.10" />
 
 	<!-- Packages specific to testing needs -->
 	<PackageReference Include="Arkitektum.GIS.Lib.MetadataCSW" Version="2.0.0" />
 	<PackageReference Include="Arkitektum.GIS.Lib.SerializeUtil" Version="1.4.0" />
+	<PackageReference Include="xunit.v3" Version="3.2.2" />
   </ItemGroup>
 
   <ItemGroup>
