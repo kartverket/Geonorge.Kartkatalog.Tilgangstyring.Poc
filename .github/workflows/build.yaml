@@ -8,9 +8,9 @@ on:
 
 env:
   DOCKER_REGISTRY: ghcr.io
-  NAME: kartverket/geonorge-kartkatalog-backend
-  ENV_SUFFIX: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
-  DEPLOY_PATH: ${{ github.ref_name == 'main' && 'env/atkv3-prod/geonorge-kartkatalog/kartkatalog-backend-version' || 'env/atkv3-dev/geonorge-kartkatalog-dev/kartkatalog-backend-version' }}
+  NAME: kartverket/tilgangstyring-kartkatalog-backend
+  ENV_SUFFIX: dev
+  DEPLOY_PATH: env/atkv3-dev/geonorge-kartkatalog-dev-tilgangsstyring/tilgangstyring-kartkatalog-backend-version
 
 jobs:
   build_image:
@@ -116,7 +116,7 @@ jobs:
         id: octo-sts
         with:
           scope: kartverket/geonorge-apps
-          identity: kartkatalog-backend
+          identity: tilgangstyring-kartkatalog-backend
 
       - name: Checkout apps repository
         uses: actions/checkout@v6
