@@ -86,37 +86,21 @@ jobs:
           echo "Tags: ${{ steps.meta.outputs.tags }}" >> "$GITHUB_STEP_SUMMARY"
           echo "Digest: ${{ steps.build_image.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
           echo "version=${{ github.ref_name }}@${{ steps.build_image.outputs.digest }}" >> "$GITHUB_OUTPUT"
-
-  run-pharos:
-    name: Run Pharos
-    runs-on: ubuntu-latest
-    needs: [build_image]
-    permissions:
-      actions: read
-      packages: read
-      contents: read
-      security-events: write
-    steps:
-      - name: "Run Pharos"
-        uses: kartverket/pharos@v0.6.4
-        with:
-          image_url: ${{ env.DOCKER_REGISTRY }}/${{ env.NAME }}:${{ needs.build_image.outputs.short_tag }}
-
   deploy:
     runs-on: ubuntu-latest
-    needs: [build_image, run-pharos]
+    needs: [build_image]
     name: Deploy
     permissions:
       contents: read
       id-token: write
     # Using always() to ensure the deploy runs on dev even if run-pharos job fails, but only deploy to main if run-pharos is successful
-    if: always() && needs.build_image.result == 'success' && needs.run-pharos.result != 'cancelled' && (github.ref_name == 'dev' || needs.run-pharos.result == 'success')
+    if: always() && needs.build_image.result == 'success'
     steps:
       - uses: octo-sts/action@f603d3be9d8dd9871a265776e625a27b00effe05
         id: octo-sts
         with:
           scope: kartverket/geonorge-apps
-          identity: tilgangstyring-kartkatalog-backend
+          identity: kartkatalog-be-tilgangsstyring-poc
 
       - name: Checkout apps repository
         uses: actions/checkout@v6
