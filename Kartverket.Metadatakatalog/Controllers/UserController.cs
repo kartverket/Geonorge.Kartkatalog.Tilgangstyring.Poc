@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Cors;
 namespace Kartverket.Metadatakatalog.Controllers
 {
     [ApiController]
+    [EnableCors]
     [Route("api")]
     public class UserController(ILogger<HomeController> logger) : Controller
     {
