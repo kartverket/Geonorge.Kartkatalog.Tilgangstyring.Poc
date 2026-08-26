@@ -10,15 +10,21 @@ using Microsoft.AspNetCore.Cors;
 namespace Kartverket.Metadatakatalog.Controllers
 {
     [ApiController]
-    [EnableCors]
     [Route("api")]
-    public class UserController(ILogger<HomeController> logger) : Controller
+    [EnableCors]
+    public class UserController(ILogger<UserController> logger) : Controller
     {
         [HttpGet("user")]
         [ProducesResponseType(typeof(UserResult), 200)]
         public IActionResult GetUser()
         {
             logger.LogInformation("Get user called");
+            
+            foreach (var header in Request.Headers)
+            {
+                logger.LogInformation(">{Key}: {Value}", header.Key, header.Value.ToString());
+            }
+            
             UserResult result = new UserResult("Navn Navnesen", "navn@eksempel.no");
 
             return Ok(result);
