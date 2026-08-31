@@ -9,7 +9,8 @@ public class TokenExchangeController : Controller
     private readonly string _texasUrl;
     private readonly ILogger<TokenExchangeController> _logger;
 
-    public TokenExchangeController(Geonorge.Utilities.Organization.IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<TokenExchangeController> logger)
+    public TokenExchangeController(Geonorge.Utilities.Organization.IHttpClientFactory httpClientFactory,
+        IConfiguration configuration, ILogger<TokenExchangeController> logger)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
@@ -20,19 +21,16 @@ public class TokenExchangeController : Controller
     {
         [JsonPropertyName("identity_provider")]
         public string IdentityProvider { get; set; }
-        [JsonPropertyName("user_token")]
-        public string UserToken { get; set; }
-        [JsonPropertyName("target")]
-        public string Target { get; set; }
+
+        [JsonPropertyName("user_token")] public string UserToken { get; set; }
+        [JsonPropertyName("target")] public string Target { get; set; }
     }
+
     private struct ExchangeResponse
     {
-        [JsonPropertyName("access_token")]
-        public string AccessToken { get; set; }
-        [JsonPropertyName("expires_in")]
-        public string ExpiresIn { get; set; }
-        [JsonPropertyName("token_type")]
-        public string TokenType { get; set; }
+        [JsonPropertyName("access_token")] public string AccessToken { get; set; }
+        [JsonPropertyName("expires_in")] public string ExpiresIn { get; set; }
+        [JsonPropertyName("token_type")] public string TokenType { get; set; }
     }
 
     [Route("api/token-exchange")]
@@ -42,6 +40,7 @@ public class TokenExchangeController : Controller
         {
             return Unauthorized();
         }
+
         var userToken = Request.Headers.Authorization[0];
         var request = new HttpRequestMessage
         {
@@ -53,9 +52,12 @@ public class TokenExchangeController : Controller
         var response = await _httpClientFactory.GetHttpClient().SendAsync(request);
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogError("Texas call failed, {response}", response);
+            var body = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Texas call failed, {response} {body}", response,
+                body);
             return new StatusCodeResult(503);
         }
+
         try
         {
             var responseBody = await response.Content.ReadFromJsonAsync<ExchangeResponse>();
@@ -72,7 +74,7 @@ public class TokenExchangeController : Controller
         }
         catch (Exception e)
         {
-            _logger.LogError(e,"Could not parse response body from Texas service");
+            _logger.LogError(e, "Could not parse response body from Texas service");
             return UnprocessableEntity();
         }
     }
