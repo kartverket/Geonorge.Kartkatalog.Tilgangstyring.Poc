@@ -20,11 +20,6 @@ namespace Kartverket.Metadatakatalog.Controllers
         public IActionResult GetUser()
         {
             logger.LogInformation("Get user called");
-            
-            foreach (var header in Request.Headers)
-            {
-                logger.LogInformation(">{Key}: {Value}", header.Key, header.Value.ToString());
-            }
 
             Request.Headers.TryGetValue("zt-name", out StringValues ztName);
 
