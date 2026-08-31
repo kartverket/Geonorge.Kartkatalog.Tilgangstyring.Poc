@@ -48,11 +48,12 @@ public class TokenExchangeController : Controller
             RequestUri = new Uri($"{_texasUrl}/api/v1/token/exchange"),
             Method = HttpMethod.Post,
             Content = JsonContent.Create(new ExchangeRequest
-                { IdentityProvider = "ansattporten", UserToken = userToken, Target = "<nedlastingsapi>" })
+                { IdentityProvider = "ansattporten", UserToken = userToken, Target = "" })
         };
         var response = await _httpClientFactory.GetHttpClient().SendAsync(request);
         if (!response.IsSuccessStatusCode)
         {
+            _logger.LogError("Texas call failed, {response}", response);
             return new StatusCodeResult(503);
         }
         try
