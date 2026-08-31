@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Kartverket.Metadatakatalog.Service;
 using Kartverket.Metadatakatalog.Helpers;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Primitives;
 
 namespace Kartverket.Metadatakatalog.Controllers
 {
@@ -24,8 +25,17 @@ namespace Kartverket.Metadatakatalog.Controllers
             {
                 logger.LogInformation(">{Key}: {Value}", header.Key, header.Value.ToString());
             }
+
+            Request.Headers.TryGetValue("zt-name", out StringValues ztName);
+
+            string name = "Navn Navnesen";
             
-            UserResult result = new UserResult("Navn Navnesen", "navn@eksempel.no");
+            if (!String.IsNullOrEmpty(ztName[0]))
+            {
+                name = ztName[0];
+            }
+            
+            UserResult result = new UserResult(name, "navn@eksempel.no");
 
             return Ok(result);
         }
