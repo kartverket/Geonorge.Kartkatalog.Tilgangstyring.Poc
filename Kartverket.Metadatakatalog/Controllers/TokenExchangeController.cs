@@ -42,6 +42,7 @@ public class TokenExchangeController : Controller
         }
 
         var userToken = Request.Headers.Authorization[0];
+        _logger.LogInformation("Usertoken: {userToken}", userToken);
         var request = new HttpRequestMessage
         {
             RequestUri = new Uri($"{_texasUrl}/api/v1/token/exchange"),
