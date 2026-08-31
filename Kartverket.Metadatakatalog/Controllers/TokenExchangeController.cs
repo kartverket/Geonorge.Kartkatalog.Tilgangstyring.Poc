@@ -57,7 +57,7 @@ public class TokenExchangeController : Controller
             RequestUri = new Uri($"{_texasUrl}/api/v1/token/exchange"),
             Method = HttpMethod.Post,
             Content = JsonContent.Create(new ExchangeRequest
-                { IdentityProvider = "tokenx", UserToken = userToken, Target = "atkv3-dev:geonorge-kartkatalogen-dev-tilgangsstyring:backend" })
+                { IdentityProvider = "tokenx", UserToken = userToken, Target = "atkv3-dev:atkv3-geonorge-kartkatalog-dev-tilgangsstyring:tilgangstyring-kartkatalog-backend" })
         };
         var response = await _httpClientFactory.GetHttpClient().SendAsync(request);
         if (!response.IsSuccessStatusCode)
