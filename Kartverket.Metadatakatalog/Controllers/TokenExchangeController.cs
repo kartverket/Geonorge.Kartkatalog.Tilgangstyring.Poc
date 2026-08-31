@@ -36,13 +36,22 @@ public class TokenExchangeController : Controller
     [Route("api/token-exchange")]
     public async Task<IActionResult> ExchangeToken()
     {
-        if (string.IsNullOrEmpty(Request.Headers.Authorization))
+        var authorization = Request.Headers.Authorization.FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(authorization) ||
+            !authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         {
             return Unauthorized();
         }
 
-        var userToken = Request.Headers.Authorization[0];
+        var userToken = authorization["Bearer ".Length..].Trim();
+
+        if (string.IsNullOrWhiteSpace(userToken))
+        {
+            return Unauthorized();
+        }
         _logger.LogInformation("Usertoken: {userToken}", userToken);
+        
         var request = new HttpRequestMessage
         {
             RequestUri = new Uri($"{_texasUrl}/api/v1/token/exchange"),
