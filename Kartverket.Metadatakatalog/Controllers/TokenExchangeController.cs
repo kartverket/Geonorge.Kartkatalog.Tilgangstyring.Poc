@@ -1,23 +1,19 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using Castle.Core.Internal;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kartverket.Metadatakatalog.Controllers;
 
 public class TokenExchangeController : Controller
 {
-    private readonly HttpClient _httpClient;
+    private readonly Geonorge.Utilities.Organization.IHttpClientFactory _httpClientFactory;
+    private readonly string _texasUrl;
     private readonly ILogger<TokenExchangeController> _logger;
 
-    public TokenExchangeController(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<TokenExchangeController> logger)
+    public TokenExchangeController(Geonorge.Utilities.Organization.IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<TokenExchangeController> logger)
     {
         _logger = logger;
-        _httpClient = httpClientFactory.CreateClient();
-        var texasUrl = configuration["TEXAS_URL"];
-        _logger.LogInformation("Texas url: {url}", texasUrl);
-        _httpClient.BaseAddress = new Uri(texasUrl!);
+        _httpClientFactory = httpClientFactory;
+        _texasUrl = configuration["TEXAS_URL"];
     }
 
     private struct ExchangeRequest
@@ -34,7 +30,7 @@ public class TokenExchangeController : Controller
         [JsonPropertyName("access_token")]
         public string AccessToken { get; set; }
         [JsonPropertyName("expires_in")]
-        public string expiresIn { get; set; }
+        public string ExpiresIn { get; set; }
         [JsonPropertyName("token_type")]
         public string TokenType { get; set; }
     }
@@ -42,19 +38,19 @@ public class TokenExchangeController : Controller
     [Route("api/token-exchange")]
     public async Task<IActionResult> ExchangeToken()
     {
-        if (Request.Headers.Authorization.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(Request.Headers.Authorization))
         {
             return Unauthorized();
         }
         var userToken = Request.Headers.Authorization[0];
         var request = new HttpRequestMessage
         {
-            RequestUri = new Uri("/api/v1/token/exchange"),
+            RequestUri = new Uri($"{_texasUrl}/api/v1/token/exchange"),
             Method = HttpMethod.Post,
             Content = JsonContent.Create(new ExchangeRequest
                 { IdentityProvider = "ansattporten", UserToken = userToken, Target = "<nedlastingsapi>" })
         };
-        var response = await _httpClient.SendAsync(request);
+        var response = await _httpClientFactory.GetHttpClient().SendAsync(request);
         if (!response.IsSuccessStatusCode)
         {
             return new StatusCodeResult(503);
