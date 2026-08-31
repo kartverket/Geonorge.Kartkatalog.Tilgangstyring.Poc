@@ -24,12 +24,7 @@ namespace Kartverket.Metadatakatalog.Controllers
             //Ikke helt safe for injection og bruk rett fra headeren, men for POC er det godt nok
             Request.Headers.TryGetValue("zt-name", out StringValues ztName);
 
-            string name = "Navn Navnesen";
-            
-            if (!String.IsNullOrEmpty(ztName[0]))
-            {
-                name = ztName[0];
-            }
+            string name = ztName[0] ?? "Navn Navnesen";
             
             UserResult result = new UserResult(name, "navn@eksempel.no");
 
