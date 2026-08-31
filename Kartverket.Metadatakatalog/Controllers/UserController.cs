@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Kartverket.Metadatakatalog.Service;
 using Kartverket.Metadatakatalog.Helpers;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Primitives;
 
 namespace Kartverket.Metadatakatalog.Controllers
 {
@@ -19,13 +20,13 @@ namespace Kartverket.Metadatakatalog.Controllers
         public IActionResult GetUser()
         {
             logger.LogInformation("Get user called");
+
+            //Ikke helt safe for injection og bruk rett fra headeren, men for POC er det godt nok
+            Request.Headers.TryGetValue("zt-name", out StringValues ztName);
+
+            string name = ztName[0] ?? "Navn Navnesen";
             
-            foreach (var header in Request.Headers)
-            {
-                logger.LogInformation(">{Key}: {Value}", header.Key, header.Value.ToString());
-            }
-            
-            UserResult result = new UserResult("Navn Navnesen", "navn@eksempel.no");
+            UserResult result = new UserResult(name, "navn@eksempel.no");
 
             return Ok(result);
         }
