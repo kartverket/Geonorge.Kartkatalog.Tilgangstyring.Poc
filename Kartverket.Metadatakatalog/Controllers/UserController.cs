@@ -21,6 +21,7 @@ namespace Kartverket.Metadatakatalog.Controllers
         {
             logger.LogInformation("Get user called");
 
+            //Ikke helt safe for injection og bruk rett fra headeren, men for POC er det godt nok
             Request.Headers.TryGetValue("zt-name", out StringValues ztName);
 
             string name = "Navn Navnesen";
