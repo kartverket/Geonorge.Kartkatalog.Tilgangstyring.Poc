@@ -16,7 +16,7 @@ public class TokenExchangeController : Controller
         _logger = logger;
         _httpClient = httpClientFactory.CreateClient();
         var texasUrl = configuration["TEXAS_URL"];
-        _logger.LogInformation("Texas url: {}", texasUrl);
+        _logger.LogInformation("Texas url: {url}", texasUrl);
         _httpClient.BaseAddress = new Uri(texasUrl!);
     }
 
