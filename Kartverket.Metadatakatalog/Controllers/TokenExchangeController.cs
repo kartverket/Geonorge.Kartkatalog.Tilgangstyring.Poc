@@ -48,7 +48,7 @@ public class TokenExchangeController : Controller
         var userToken = Request.Headers.Authorization[0];
         var request = new HttpRequestMessage
         {
-            RequestUri = new Uri("/api/v1/token/exchange"),
+            RequestUri = new Uri("api/v1/token/exchange"),
             Method = HttpMethod.Post,
             Content = JsonContent.Create(new ExchangeRequest
                 { IdentityProvider = "ansattporten", UserToken = userToken, Target = "<nedlastingsapi>" })
