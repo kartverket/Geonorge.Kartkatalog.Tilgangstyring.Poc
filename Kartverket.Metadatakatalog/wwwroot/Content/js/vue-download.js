@@ -1427,7 +1427,7 @@ var mainVueModel = Vue.createApp({
                             if (orderLines[key].capabilities._links !== undefined && orderLines[key].capabilities._links.length) {
                                 orderLines[key].capabilities._links.forEach(function (link) {
                                     if (link.rel === "http://rel.geonorge.no/download/order") {
-                                        orderLines[key].metadata.orderDistributionUrl = link.href;
+                                        orderLines[key].metadata.orderDistributionUrl = link.href.replace("nedlasting.geonorge.no", "tilgangstyring-nedlastingapi.atkv3-dev.kartverket.cloud");
                                     }
                                     if (link.rel === "http://rel.geonorge.no/download/can-download") {
                                         orderLines[key].metadata.canDownloadUrl = link.href;
