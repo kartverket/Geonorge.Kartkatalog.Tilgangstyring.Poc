@@ -3,19 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Kartverket.Metadatakatalog.Controllers;
 
-public class TokenExchangeController : Controller
+public class TokenExchangeController(
+    Geonorge.Utilities.Organization.IHttpClientFactory httpClientFactory,
+    IConfiguration configuration,
+    ILogger<TokenExchangeController> logger)
+    : Controller
 {
-    private readonly Geonorge.Utilities.Organization.IHttpClientFactory _httpClientFactory;
-    private readonly string _texasUrl;
-    private readonly ILogger<TokenExchangeController> _logger;
-
-    public TokenExchangeController(Geonorge.Utilities.Organization.IHttpClientFactory httpClientFactory,
-        IConfiguration configuration, ILogger<TokenExchangeController> logger)
-    {
-        _logger = logger;
-        _httpClientFactory = httpClientFactory;
-        _texasUrl = configuration["TEXAS_URL"];
-    }
+    private readonly string _texasUrl = configuration["TEXAS_URL"];
 
     private struct ExchangeRequest
     {
@@ -50,8 +44,9 @@ public class TokenExchangeController : Controller
         {
             return Unauthorized();
         }
-        _logger.LogInformation("Usertoken: {userToken}", userToken);
-        
+
+        logger.LogInformation("Usertoken: {userToken}", userToken);
+
         var request = new HttpRequestMessage
         {
             RequestUri = new Uri($"{_texasUrl}/api/v1/token/exchange"),
@@ -59,11 +54,11 @@ public class TokenExchangeController : Controller
             Content = JsonContent.Create(new ExchangeRequest
                 { IdentityProvider = "tokenx", UserToken = userToken, Target = "atkv3-dev:atkv3-geonorge-kartkatalog-dev-tilgangsstyring:tilgangstyring-kartkatalog-backend" })
         };
-        var response = await _httpClientFactory.GetHttpClient().SendAsync(request);
+        var response = await httpClientFactory.GetHttpClient().SendAsync(request);
         if (!response.IsSuccessStatusCode)
         {
             var body = await response.Content.ReadAsStringAsync();
-            _logger.LogError("Texas call failed, {response} {body}", response,
+            logger.LogError("Texas call failed, {response} {body}", response,
                 body);
             return new StatusCodeResult(503);
         }
@@ -84,7 +79,7 @@ public class TokenExchangeController : Controller
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Could not parse response body from Texas service");
+            logger.LogError(e, "Could not parse response body from Texas service");
             return UnprocessableEntity();
         }
     }
