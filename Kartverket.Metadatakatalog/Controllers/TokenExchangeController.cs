@@ -74,9 +74,9 @@ public class TokenExchangeController(
                 "oidcAccessToken",
                 responseBody.AccessToken, new CookieOptions
                 {
-                    HttpOnly = true,
+                    HttpOnly = false,
                     Secure = true,
-                    SameSite = SameSiteMode.Strict
+                    SameSite = SameSiteMode.None
                 });
             return Ok();
         }
